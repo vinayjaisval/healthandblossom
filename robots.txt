@@ -1,0 +1,5 @@
+User-agent: * Disallow: /
+User-agent: *
+Disallow:
+Disallow: /cgi-bin/
+Sitemap: https://healthandblossom.com/sitemap.xml

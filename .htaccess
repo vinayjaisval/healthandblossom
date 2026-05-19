@@ -1,0 +1,47 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # ✅ Block suspicious query strings (basic attack patterns)
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|<|>|%3C|%3E|script|GLOBALS|_REQUEST|union|select|insert|drop|--|#) [NC]
+    RewriteRule .* - [F,L]
+
+    # ✅ Block common bad bots / tools
+    RewriteCond %{HTTP_USER_AGENT} (curl|wget|python|nikto|sqlmap|bot|crawler|scanner) [NC]
+    RewriteRule .* - [F,L]
+
+    # ✅ Prevent access to sensitive files
+    RewriteRule \.(env|log|ini|sql|bak|config)$ - [F,L,NC]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# ✅ Strong protection for hidden/system files
+<FilesMatch "^(\.env|\.git|\.htaccess|composer\.(json|lock)|package\.json|artisan)$">
+    Require all denied
+</FilesMatch>
+
+# ✅ Disable directory browsing
+Options -Indexes
+
+# ✅ Security headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
