@@ -19,12 +19,12 @@ class CategoryManager
         return $x;
     }
 
-    public static function products($category_id, $request=null)
+    public static function products($category_id, $request = null)
     {
         $user = Helpers::get_customer($request);
-        $id = '"'.$category_id.'"';
-        $products = Product::with(['flashDealProducts.flashDeal','rating','tags', 'seller.shop'])
-            ->withCount(['reviews','wishList' => function($query) use($user){
+        $id = '"' . $category_id . '"';
+        $products = Product::with(['flashDealProducts.flashDeal', 'rating', 'tags', 'seller.shop'])
+            ->withCount(['reviews', 'wishList' => function ($query) use ($user) {
                 $query->where('customer_id', $user != 'offline' ? $user->id : '0');
             }])
             ->active()
@@ -38,8 +38,8 @@ class CategoryManager
             $flashDealEndDate = 0;
             if (count($product->flashDealProducts) > 0) {
                 $flashDeal = null;
-                foreach($product->flashDealProducts as $flashDealData){
-                    if($flashDealData->flashDeal){
+                foreach ($product->flashDealProducts as $flashDealData) {
+                    if ($flashDealData->flashDeal) {
                         $flashDeal = $flashDealData->flashDeal;
                     }
                 }
@@ -58,10 +58,11 @@ class CategoryManager
         return $products;
     }
 
-    public static function get_category_name($id){
+    public static function get_category_name($id)
+    {
         $category = Category::find($id);
 
-        if($category){
+        if ($category) {
             return $category->name;
         }
         return '';
@@ -70,14 +71,14 @@ class CategoryManager
     public static function getCategoriesWithCountingAndPriorityWiseSorting($dataLimit = null)
     {
         $categories = Category::with(['product' => function ($query) {
-                return $query->active()->withCount(['orderDetails']);
-            }])->withCount(['product' => function ($query) {
-                $query->active();
-            }])->with(['childes' => function ($query) {
+            return $query->active()->withCount(['orderDetails']);
+        }])->withCount(['product' => function ($query) {
+            $query->active();
+        }])->with(['childes' => function ($query) {
             $query->with(['childes' => function ($query) {
                 $query->withCount(['subSubCategoryProduct'])->where('position', 2);
             }])->withCount(['subCategoryProduct'])->where('position', 1);
-        }, 'childes.childes'])->where('position', 0)->where('organic_status',0);
+        }, 'childes.childes'])->where('position', 0)->where('organic_status', 0);
 
         $categoriesProcessed = self::getPriorityWiseCategorySortQuery(query: $categories->get());
         if ($dataLimit) {
@@ -85,20 +86,20 @@ class CategoryManager
         }
         return $categoriesProcessed;
     }
-  
-  
-  
+
+
+
     public static function getIngredientsWithCountingAndPriorityWiseSorting($dataLimit = null)
     {
         $categories = Category::with(['product' => function ($query) {
-                return $query->active()->withCount(['orderDetails']);
-            }])->withCount(['product' => function ($query) {
-                $query->active();
-            }])->with(['childes' => function ($query) {
+            return $query->active()->withCount(['orderDetails']);
+        }])->withCount(['product' => function ($query) {
+            $query->active();
+        }])->with(['childes' => function ($query) {
             $query->with(['childes' => function ($query) {
                 $query->withCount(['subSubCategoryProduct'])->where('position', 2);
             }])->withCount(['subCategoryProduct'])->where('position', 1);
-        }, 'childes.childes'])->where('position', 0)->where('organic_status','1');
+        }, 'childes.childes'])->where('position', 0)->where('organic_status', '1');
 
         $categoriesProcessed = self::getPriorityWiseCategorySortQuery(query: $categories->get());
         if ($dataLimit) {

@@ -27,7 +27,7 @@
         @if ($flashDeal['flashDeal'] && $flashDeal['flashDealProducts'])
             @include('web-views.partials._flash-deal', ['decimal_point_settings'=>$decimalPointSettings])
         @endif
- @include('web-views.partials._category-section-home')
+ <!-- @include('web-views.partials._category-section-home') -->
 
       @if ($featuredProductsList->count() > 0 )
             <div class="container-fluid py-4 rtl px-0 px-md-3">
