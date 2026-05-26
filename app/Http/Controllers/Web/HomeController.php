@@ -49,6 +49,7 @@ class HomeController extends Controller
     public function index()
     {
         $themeName = theme_root_path();
+       
         return match ($themeName) {
             'default' => self::default_theme(),
             'theme_aster' => self::theme_aster(),
@@ -59,8 +60,12 @@ class HomeController extends Controller
 
     public function default_theme(): View
     {
-        $categories = CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting();
-      $categories = $categories->except(0)->values(); // skip element at index 1
+        $categories = CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting()
+        ->where('home_status', 1);
+
+       $categories = $categories->except(0)->values();
+
+
         $Ingredients = CategoryManager::getIngredientsWithCountingAndPriorityWiseSorting();
         $userId = Auth::guard('customer')->user() ? Auth::guard('customer')->id() : 0;
         $flashDeal = ProductManager::getPriorityWiseFlashDealsProductsQuery(userId: $userId);

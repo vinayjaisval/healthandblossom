@@ -226,15 +226,30 @@
                         </button>
                     </div>
 
-                    <ul class="navbar-nav d-block d-md-none">
-                        <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
-                            <a class="nav-link" href="{{route('home')}}">{{ translate('home')}}</a>
-                        </li>
-                    </ul>
+                   <ul class="navbar-nav d-block d-md-none">
+    
+    <li class="nav-item dropdown {{ request()->is('/') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('home') }}">
+            {{ translate('home') }}
+        </a>
+    </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('products?id=414&data_from=category&page=1') }}">
+            Organic Food
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('products?id=216&data_from=category&page=1') }}">
+            Skin Care
+        </a>
+    </li>
+
+</ul>
                     @php($categories = \App\Utils\CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting(dataLimit: 1))
 
-                    <ul class="navbar-nav mega-nav pr-lg-2 pl-lg-2 mr-2 d-none d-md-block __mega-nav">
+                    <!-- <ul class="navbar-nav mega-nav pr-lg-2 pl-lg-2 mr-2 d-none d-md-block __mega-nav">
                         <li class="nav-item {{!request()->is('/')?'dropdown':''}}">
 
                             <a class="nav-link dropdown-toggle category-menu-toggle-btn ps-0"
@@ -250,9 +265,9 @@
                                 </span>
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
 
-                    <ul class="navbar-nav mega-nav1 pr-md-2 pl-md-2 d-block d-xl-none">
+                    <!-- <ul class="navbar-nav mega-nav1 pr-md-2 pl-md-2 d-block d-xl-none">
                         <li class="nav-item dropdown d-md-none">
                             <a class="nav-link dropdown-toggle ps-0"
                                href="javascript:" data-toggle="dropdown">
@@ -317,13 +332,15 @@
                                 </li>
                             </ul>
                         </li>
-                    </ul>
+                    </ul> -->
 
                     <ul class="navbar-nav">
                         <div class="d-flex text-white gap-d mx-3 ">
                         <li><a href="{{url('products?id=414&data_from=category&page=1')}}">Organic Food</a></li>
-                        <li><a href="{{url('products?id=216&data_from=category&page=1')}}">Combo</a></li>
-                          {{--  <li><a href="{{url('products?id=217&data_from=category&page=1')}}">Hair Care</a></li>--}}
+                        <li><a href="{{url('products?id=216&data_from=category&page=1')}}">Skin Care</a></li>
+                        
+                        
+                        {{--  <li><a href="{{url('products?id=217&data_from=category&page=1')}}">Hair Care</a></li>--}}
                            {{-- <li><a href="{{url('products?id=218&data_from=category&page=1')}}">Bath And Body Care</a></li>--}}
                           {{--  <li><a href="{{url('products?id=221&data_from=category&page=1')}}">Baby Care</a></li>--}}
                           {{--  <li><a href="{{url('products?id=218&data_from=category&page=1')}}">Bath And Body Care</a></li>--}}
@@ -335,7 +352,7 @@
                             <a class="nav-link" href="{{route('home')}}">{{ translate('home')}}</a>
                         </li> --}}
 
-                        {{-- @if(getWebConfig(name: 'product_brand'))
+                         <!-- @if(getWebConfig(name: 'product_brand'))
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#"
                                    data-toggle="dropdown">{{ translate('brand') }}</a>
@@ -368,7 +385,8 @@
                                     </li>
                                 </ul>
                             </li>
-                        @endif --}}
+                        @endif  -->
+                        
                         <!-- @php($discount_product = App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count()) -->
                         <!-- @if ($discount_product>0)
                             <li class="nav-item dropdown {{request()->is('/')?'active':''}}">

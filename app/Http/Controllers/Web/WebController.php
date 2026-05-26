@@ -128,15 +128,37 @@ class WebController extends Controller
         if (!$robotsMetaContentData) {
             $robotsMetaContentData = $this->robotsMetaContentRepo->getFirstWhere(params: ['page_name' => 'default']);
         }
-        $categories = Category::with(['product' => function ($query) {
+        $categories = Category::with([
+        'product' => function ($query) {
             return $query->active()->withCount(['orderDetails']);
-        }])->withCount(['product' => function ($query) {
+        }
+    ])
+    ->withCount([
+        'product' => function ($query) {
             $query->active();
-        }])->with(['childes' => function ($query) {
-            $query->with(['childes' => function ($query) {
-                $query->withCount(['subSubCategoryProduct'])->where('position', 2);
-            }])->withCount(['subCategoryProduct'])->where('position', 1);
-        }, 'childes.childes'])->where('position', 0)->where('organic_status',0)->get();
+        }
+    ])
+    ->with([
+        'childes' => function ($query) {
+
+            $query->with([
+                'childes' => function ($query) {
+
+                    $query->withCount(['subSubCategoryProduct'])
+                          ->where('position', 2);
+
+                }
+            ])
+            ->withCount(['subCategoryProduct'])
+            ->where('position', 1);
+
+        },
+        'childes.childes'
+    ])
+    ->where('position', 0)
+    ->where('organic_status', 0)
+    ->where('home_status', 1) // sirf visible categories
+    ->get();
 
         return view('web-views.products.categories', [
             'categories' => CategoryManager::getPriorityWiseCategorySortQuery(query: $categories),

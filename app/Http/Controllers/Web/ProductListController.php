@@ -33,7 +33,9 @@ class ProductListController extends Controller
 {
     public function products(Request $request)
     {
+        
         $themeName = theme_root_path();
+       
 
         return match ($themeName) {
             'default' => self::default_theme($request),
@@ -56,7 +58,9 @@ class ProductListController extends Controller
 
     public function default_theme($request): View|JsonResponse|Redirector|RedirectResponse
     {
-        $categories = CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting();
+       
+        $categories = CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting() ->where('home_status', 1);
+      
         $activeBrands = BrandManager::getActiveBrandWithCountingAndPriorityWiseSorting();
         $productSortBy = $request->get('sort_by');
 
@@ -72,6 +76,7 @@ class ProductListController extends Controller
 
         if ($request['data_from'] == 'category') {
             $data['brand_name'] = Category::find((int)$request['id'])->name;
+            
         }
         if ($request['data_from'] == 'brand') {
             $brand_data = Brand::active()->find((int)$request['id']);
@@ -93,6 +98,7 @@ class ProductListController extends Controller
             }
         ])->withCount(['reviews']);
 
+        
         if ($request['data_from'] == 'discounted') {
             $productListData = $productListData->where('discount', '!=', 0);
         }
@@ -110,12 +116,25 @@ class ProductListController extends Controller
             $productListData = $productListData->orderByRaw("CASE WHEN name LIKE '%{$searchName}%' THEN 1 ELSE 2 END, LOCATE('{$searchName}', name), name");
         }
 
-        if ($request['data_from'] == 'category') {
-            $categoryWiseProduct = $productListData->where(['category_id' => $request['id']])
-                ->orWhere(['sub_category_id' => $request['id']])
-                ->orWhere(['sub_sub_category_id' => $request['id']]);
-            $productListData = ProductManager::getPriorityWiseCategoryWiseProductsQuery(query: $categoryWiseProduct, dataLimit: 'all');
-        }
+           if ($request['data_from'] == 'category') {
+
+                $categoryWiseProduct = $productListData
+                    ->where('status', 1) // sirf active products
+                    ->where(function ($query) use ($request) {
+
+                        $query->where('category_id', $request['id'])
+                            ->orWhere('sub_category_id', $request['id'])
+                            ->orWhere('sub_sub_category_id', $request['id']);
+
+                    });
+
+                $productListData = ProductManager::getPriorityWiseCategoryWiseProductsQuery(
+                    query: $categoryWiseProduct,
+                    dataLimit: 'all'
+                );
+
+            
+            }
 
         if ($request['data_from'] == 'brand') {
             $productListData = $productListData->where('brand_id', $request['id'])->get();
@@ -189,7 +208,9 @@ class ProductListController extends Controller
                     ->pluck('translationable_id');
             }
             $productListData = ProductManager::getPriorityWiseSearchedProductQuery(query: $productListData->whereIn('id', $getProductIds), keyword: $request['name'], dataLimit: 'all', type: 'searched');
-        }
+       
+      
+            }
 
         if ($productSortBy) {
             if ($productSortBy == 'latest') {
