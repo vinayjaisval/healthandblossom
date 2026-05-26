@@ -190,7 +190,7 @@
                                     </div>
                                 </div>
                             </a>
-                          {{--   <div class="text-align-direction dropdown-menu __auth-dropdown dropdown-menu-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}"
+                          {{--<div class="text-align-direction dropdown-menu __auth-dropdown dropdown-menu-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}"
                                  aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="{{route('customer.auth.login')}}">
                                     <i class="fa fa-sign-in mr-2"></i> {{ translate('sign_in')}}
@@ -243,6 +243,11 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ url('products?id=216&data_from=category&page=1') }}">
             Skin Care
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url('products?id=439&data_from=category&page=1') }}">
+            Health Supplements
         </a>
     </li>
 
@@ -338,6 +343,7 @@
                         <div class="d-flex text-white gap-d mx-3 ">
                         <li><a href="{{url('products?id=414&data_from=category&page=1')}}">Organic Food</a></li>
                         <li><a href="{{url('products?id=216&data_from=category&page=1')}}">Skin Care</a></li>
+                        <li><a href="{{url('products?id=439&data_from=category&page=1')}}">Health Supplements</a></li>
                         
                         
                         {{--  <li><a href="{{url('products?id=217&data_from=category&page=1')}}">Hair Care</a></li>--}}
