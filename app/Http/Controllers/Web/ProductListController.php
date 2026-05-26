@@ -209,7 +209,7 @@ class ProductListController extends Controller
             }
             $productListData = ProductManager::getPriorityWiseSearchedProductQuery(query: $productListData->whereIn('id', $getProductIds), keyword: $request['name'], dataLimit: 'all', type: 'searched');
        
-       dd($productListData);
+      
             }
 
         if ($productSortBy) {
