@@ -346,12 +346,12 @@
                         <li><a href="{{url('products?id=439&data_from=category&page=1')}}">Health Supplements</a></li>
                         
                         
-                        {{--  <li><a href="{{url('products?id=217&data_from=category&page=1')}}">Hair Care</a></li>--}}
-                           {{-- <li><a href="{{url('products?id=218&data_from=category&page=1')}}">Bath And Body Care</a></li>--}}
-                          {{--  <li><a href="{{url('products?id=221&data_from=category&page=1')}}">Baby Care</a></li>--}}
-                          {{--  <li><a href="{{url('products?id=218&data_from=category&page=1')}}">Bath And Body Care</a></li>--}}
-                        {{-- <li><a href="{{url('products?id=223&data_from=category&page=1')}}">Health & Wellness</a></li> --}}
-                        {{-- <li><a href="{{url('products?id=224&data_from=category&page=1')}}">Fashion & Apparel</a></li> --}}
+                             {{--  <li><a href="{{url('products?id=217&data_from=category&page=1')}}">Hair Care</a></li>--}}
+                             {{-- <li><a href="{{url('products?id=218&data_from=category&page=1')}}">Bath And Body Care</a></li>--}}
+                             {{--  <li><a href="{{url('products?id=221&data_from=category&page=1')}}">Baby Care</a></li>--}}
+                             {{--  <li><a href="{{url('products?id=218&data_from=category&page=1')}}">Bath And Body Care</a></li>--}}
+                             {{-- <li><a href="{{url('products?id=223&data_from=category&page=1')}}">Health & Wellness</a></li> --}}
+                             {{-- <li><a href="{{url('products?id=224&data_from=category&page=1')}}">Fashion & Apparel</a></li> --}}
 
                         </div>
                         {{-- <li class="nav-item dropdown d-none d-md-block {{request()->is('/')?'active':''}}">
