@@ -50,8 +50,8 @@ class ProductListController extends Controller
           $ingredients_ids = [$request->id];
           $categoris = Category::where('id', $request->id)->select('id', 'name','icon','description','content_writing_area')->first();
 
-          $product = Product::whereRaw("JSON_CONTAINS(`ingredients_id`, json_array(?))", [$ingredients_ids[0]] )->get();
-          // dd($product,$categoris);
+          $product = Product::whereRaw("JSON_CONTAINS(`ingredients_id`, json_array(?))", [$ingredients_ids[0]] )->where('status', 1)->get();
+         
           return view('web-views.products.ingredients_details', compact('categoris', 'product'));
 
       }
