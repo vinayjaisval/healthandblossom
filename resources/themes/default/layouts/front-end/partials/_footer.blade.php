@@ -415,40 +415,52 @@ if (localStorage.getItem('cookieAccepted') === 'true') {
 }
 </script>
 
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.body.addEventListener("click", function (e) {
-            const target = e.target.closest("[data-track]");
-            if (target) {
-                const eventName = target.getAttribute("data-track");
-                const payload = {
-                    event: eventName,
-                    url: window.location.href,
-                    timestamp: Math.floor(Date.now() / 1000),
-                    user_agent: navigator.userAgent,
-                    fbp: getCookie('_fbp'),
-                    fbc: getCookie('_fbc'),
-                };
+document.addEventListener("DOMContentLoaded", function () {
 
-                fetch("https://www.healthandblossom.com/track-click", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify(payload)
-                });
-            }
-        });
+    document.body.addEventListener("click", function (e) {
 
-        function getCookie(name) {
-            let value = `; ${document.cookie}`;
-            let parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+        const target = e.target.closest("[data-track]");
+
+        if (target) {
+
+            const eventName = target.getAttribute("data-track");
+
+            const payload = {
+                event: eventName,
+                url: window.location.href,
+                timestamp: Math.floor(Date.now() / 1000),
+                user_agent: navigator.userAgent,
+                fbp: getCookie('_fbp'),
+                fbc: getCookie('_fbc')
+            };
+
+           fetch("https://www.healthandblossom.com/track-click", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute('content')
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => console.log("Tracked:", data))
+            .catch(error => console.error("Tracking Error:", error));
         }
     });
+
+    function getCookie(name) {
+        let value = `; ${document.cookie}`;
+        let parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return parts.pop().split(';').shift();
+        }
+        return null;
+    }
+});
 </script>
 
         @php($cookie = $web_config['cookie_setting'] ? json_decode($web_config['cookie_setting']['value'], true):null)

@@ -366,11 +366,13 @@
                                                                 data-add-text="{{ translate('add_to_cart') }}">
                                                                 <span class="string-limit">{{ translate('add_to_cart') }}</span>
                                                             </button>
-                                                            @if($product->bulk_product_status==1)
-                                                            <button class="btn btn--primary element-center" onclick="openBulkOrderModal()" type="button">
-                                                                <span class="string-limit">{{ translate('Bulk_Order') }}</span>
-                                                            </button>
-                                                            @endif
+                                                           @if($product->bulk_product_status==1)
+<button class="btn btn--primary element-center"
+        type="button"
+        onclick="openBulkOrderModal()">
+    <span class="string-limit">Bulk Order</span>
+</button>
+@endif
 
                                                             @endif
                                                             <button type="button" data-product-id="{{ $product['id'] }}"
@@ -481,7 +483,9 @@
                                         <td>{{$wholesale->min_qty}}</td>
                                         <td>
                                             <button class="btn btn-outline-primary btn-control" onclick="changeQuantity(-1,'orderQuantity{{$wholesale->id}}','wholesalePrice{{$wholesale->id}}','{{$wholesale->max_qty}}','{{$wholesale->min_qty}}',{{$wholesale->wholesale_price}},'wholesaleconvertprice{{$wholesale->id}}','orderQuantityrr{{$wholesale->id}}')">-</button>
+                                            
                                             <span id="orderQuantity{{$wholesale->id}}">{{$wholesale->max_qty}}</span>
+                                            
                                             <button class="btn btn-outline-primary btn-control" onclick="changeQuantity(1, 'orderQuantity{{$wholesale->id}}','wholesalePrice{{$wholesale->id}}','{{$wholesale->max_qty}}','{{$wholesale->min_qty}}',{{$wholesale->wholesale_price}},'wholesaleconvertprice{{$wholesale->id}}','orderQuantityrr{{$wholesale->id}}')">+</button>
                                         </td>
                                         <td id="wholesalePrice{{$wholesale->id}}">{{webCurrencyConverter(amount: $wholesale->wholesale_price)}}</td>
@@ -501,6 +505,9 @@
                                 </tbody>
                             </table>
                             @endif
+
+
+
 
                             <!-- <div class="vp-front-accordian">
                                     <div class="menu--caret-accordion open">
@@ -664,6 +671,8 @@
                                         </div>
                                     </div>
                                 </div> -->
+
+                                
                             <div class="accordion__custom custom-cr" id="accordion">
                                 <div class="">
                                     <div class="card-header card-head-txt" id="heading-0">
@@ -1232,6 +1241,77 @@
         </div>
     </div>
 </div>
+
+@if($product->bulk_product_status==1)
+<div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Bulk Order Enquiry</h5>
+               <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="orderForm">
+
+                    @csrf
+
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="product_name" value="{{ $product->name }}">
+
+                    <div class="mb-3">
+                        <label class="form-label">Name *</label>
+                        <input type="text" name="name" class="form-control">
+                        <small id="error-name" class="text-danger"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" class="form-control">
+                        <small id="error-email" class="text-danger"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="text" name="phone_number" class="form-control">
+                        <small id="error-phone-number" class="text-danger"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Required Quantity *</label>
+                        <input type="number" name="quantity" class="form-control">
+                        <small id="error-quantity" class="text-danger"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" class="form-control"
+                            rows="3"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        id="order-now-btn"
+                        class="btn btn-primary w-100">
+
+                        <i class="fa fa-spinner fa-spin"
+                            style="display:none;"></i>
+
+                        Submit Enquiry
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- Bootstrap 5 Styled Modal -->
 @include('layouts.front-end.partials.modal._chatting', [
 'seller' => $product->seller,
@@ -1291,46 +1371,61 @@
 </script>
 
 <script>
-    function changeQuantity(amount, elementId, elementId1, max_quantity, min_qty, whole_sale_price, updateprice, orderQuantity) {
-        let queryElement = document.getElementById(elementId1);
-        let quantityElement = document.getElementById(elementId);
-        // let queryElementUpdateprice = document.getElementById(updateprice);
-        let currentQuantity = parseInt(quantityElement.innerText);
+   function changeQuantity(
+    amount,
+    elementId,
+    priceElementId,
+    maxQty,
+    minQty,
+    wholesalePrice,
+    hiddenPriceId,
+    hiddenQtyId
+) {
 
-        let newQuantity = currentQuantity + amount;
+    let quantityElement = document.getElementById(elementId);
+    let currentQty = parseInt(quantityElement.innerText);
 
-        if (newQuantity > max_quantity) {
-            return false;
-        }
+    let newQty = currentQty + amount;
 
-        if (newQuantity < min_qty) {
-            return false;
-        }
-
-        price = parseFloat(whole_sale_price / max_quantity);
-        finell_price = parseFloat(price * newQuantity);
-
-        console.log(price, "total price", finell_price);
-        if (newQuantity >= 0) {
-            quantityElement.innerText = newQuantity;
-        }
-        $.ajax({
-            url: "{{ url('cart/change_quantity') }}",
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                convert_price: finell_price
-            },
-            success: function(response) {
-                if (response.status == true) {
-                    queryElement.innerText = response.price;
-                    document.getElementById(updateprice).value = finell_price;
-                    document.getElementById(orderQuantity).value = newQuantity;
-
-                }
-            }
-        });
+    if (newQty > parseInt(maxQty)) {
+        return false;
     }
+
+    if (newQty < parseInt(minQty)) {
+        return false;
+    }
+
+    quantityElement.innerText = newQty;
+
+    // Per unit price
+    let unitPrice = wholesalePrice / maxQty;
+
+    // Total price
+    let totalPrice = unitPrice * newQty;
+
+    $.ajax({
+        url: "{{ url('cart/change_quantity') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            convert_price: totalPrice
+        },
+        success: function(response) {
+
+            if (response.status) {
+
+                document.getElementById(priceElementId).innerHTML =
+                    response.price;
+
+                document.getElementById(hiddenPriceId).value =
+                    totalPrice.toFixed(2);
+
+                document.getElementById(hiddenQtyId).value =
+                    newQty;
+            }
+        }
+    });
+}
 
     function BuyNowWholesale(form) {
         const formData = new FormData(form);
@@ -1367,12 +1462,16 @@
     }
 
     function openBulkOrderModal() {
-        $(".bulk-table").slideToggle(500);
+        // $(".bulk-table").slideToggle(500);
+         var myModal = new bootstrap.Modal(
+        document.getElementById('myModal')
+    );
+    myModal.show();
     }
 
     //  visitors
 
-    let count = 293;
+    let count = 293;       
     const countEl = document.getElementById("visitor-count");
 
     setInterval(() => {

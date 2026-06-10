@@ -182,7 +182,7 @@ class ProductController extends BaseController
         $defaultLanguage = $languages[0];
         $digitalProductFileTypes = ['audio', 'video', 'document', 'software'];
         $hsncode = Hsncode::where('status',1)->get();
-      $wholsalerData = Wholsale::where('product_id', $id)->orderBy('id','asc')->get();
+        $wholsalerData = Wholsale::where('product_id', $id)->orderBy('id','asc')->get();
         return view(Product::UPDATE[VIEW], compact('wholsalerData','product','hsncode','ingredients','categories', 'brands', 'brandSetting', 'digitalProductSetting', 'colors', 'attributes', 'languages', 'defaultLanguage', 'digitalProductFileTypes'));
     }
 
