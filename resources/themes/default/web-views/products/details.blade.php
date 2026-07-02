@@ -367,12 +367,12 @@
                                                                 <span class="string-limit">{{ translate('add_to_cart') }}</span>
                                                             </button>
                                                            @if($product->bulk_product_status==1)
-<button class="btn btn--primary element-center"
-        type="button"
-        onclick="openBulkOrderModal()">
-    <span class="string-limit">Bulk Order</span>
-</button>
-@endif
+                                                            <button class="btn btn--primary element-center"
+                                                                    type="button"
+                                                                    onclick="openBulkOrderModal()">
+                                                                <span class="string-limit">Bulk Order</span>
+                                                            </button>
+                                                            @endif
 
                                                             @endif
                                                             <button type="button" data-product-id="{{ $product['id'] }}"
@@ -1185,6 +1185,14 @@
                             type="button">
                             <span class="string-limit">{{ translate('add_to_cart') }}</span>
                         </button>
+
+                         @if($product->bulk_product_status==1)
+                                                            <button class="btn btn--primary element-center"
+                                                                    type="button"
+                                                                    onclick="openBulkOrderModal()">
+                                                                <span class="string-limit">Bulk Order</span>
+                                                            </button>
+                                                            @endif
                         @endif
             </div>
         </div>

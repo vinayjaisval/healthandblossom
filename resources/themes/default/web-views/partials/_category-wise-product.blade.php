@@ -18,14 +18,28 @@
             </div>
 
             <div class="mt-2">
-                <div class="carousel-wrap-2 d-none d-sm-block">
-                    <div class="owl-carousel owl-theme category-wise-product-slider">
-                        @foreach($category['products'] as $key => $product)
-                        
-                            @include('web-views.partials._category-single-product',['product'=>$product,'decimal_point_settings'=>$decimal_point_settings])
+                @if($category['products']->count() > 1)
+                    <div class="owl-carousel owl-theme category-wise-product-slider"
+                        data-products-count="{{ $category['products']->count() }}">
+                        @foreach($category['products'] as $product)
+                            @include('web-views.partials._category-single-product', [
+                                'product' => $product,
+                                'decimal_point_settings' => $decimal_point_settings
+                            ])
                         @endforeach
                     </div>
-                </div>
+                @else
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4 col-6">
+                            @foreach($category['products'] as $product)
+                                @include('web-views.partials._category-single-product', [
+                                    'product' => $product,
+                                    'decimal_point_settings' => $decimal_point_settings
+                                ])
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
                 <div class="d-sm-none">
                     <div class="row g-2">
                         @foreach($category['products'] as $key=>$product)
