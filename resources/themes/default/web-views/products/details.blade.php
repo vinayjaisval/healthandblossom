@@ -756,7 +756,7 @@
                                 </div>
                                
                             </div>
-                            <div class="organic-product mt-3">
+                            <!-- <div class="organic-product mt-3">
                                 <div class="d-flex justify-content-center">
                                     <div class="icons-organic text-center">
                                         <span>Lab Tested</span>
@@ -771,7 +771,7 @@
                                         <img alt="Organic Product Icon" class="img-fluids" src="{{ asset('public/assets/back-end/product/products2.png') }}">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

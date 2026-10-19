@@ -267,7 +267,13 @@ class PhoneVerificationController extends Controller
         ];
 
         try {
-            $response = $client->request('GET', $url, ['query' => $params]);
+            // $response = $client->request('GET', $url, ['query' => $params]);
+
+            $response = $client->request('GET', $url, [
+                'query' => $params,
+                'timeout' => 30,
+                'verify' => false
+            ]);
             $responseBody = json_decode($response->getBody(), true);
             $user = User::where(['phone' => $number])->first();
             $user->phone_otp = $otp;
